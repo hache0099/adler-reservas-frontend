@@ -1,15 +1,13 @@
 <script setup>
 import HelloWorld from './components/HelloWorld.vue'
+import Navbar from './components/Navbar.vue'
 </script>
 
 <template>
-  <div id="app">
-    <div class="container mt-5">
+  <div id="app" data-bs-theme="dark">
+    <Navbar/>
+    <div class="container mt-5" >
       <!-- Barra de navegación opcional -->
-      <nav>
-        <router-link to="/">Home</router-link> |
-        <router-link to="/login">Login</router-link>
-      </nav>
 
       <!-- Aquí se cargarán las páginas -->
       <router-view/>
