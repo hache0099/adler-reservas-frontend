@@ -1,17 +1,35 @@
 <script>
+import authService from '../services/auth.service'; 
+
 export default {
   data() {
     return {
       email: "",
       password: "",
+      error: null, // Para manejar errores
+      isLoading: false // Para deshabilitar el botón durante la carga
     };
   },
   methods: {
-    handleSubmit() {
-      // Aquí irá la lógica posteriormente
-      console.log("Dummy submit:", this.email, this.password);
-    },
-  },
+    async handleSubmit() {
+      this.error = null;
+      this.isLoading = true;
+
+      try {
+        const response = await authService.login(this.email, this.password);
+        
+        // Si el backend devuelve un token:
+        if (response.data.token) {
+          localStorage.setItem('userToken', response.data.token); // Guarda el token
+          this.$router.push('/dashboard'); // Redirige al dashboard
+        }
+      } catch (err) {
+        this.error = err.response?.data?.message || 'Error al iniciar sesión';
+      } finally {
+        this.isLoading = false;
+      }
+    }
+  }
 };
 </script>
 
