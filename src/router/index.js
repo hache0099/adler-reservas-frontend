@@ -4,6 +4,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 // Importa tus componentes (páginas)
 import Login from '../components/Login.vue';
 import Home from '../components/HelloWorld.vue'; // Ejemplo adicional
+import Register from '../components/Register.vue';
 
 // Define las rutas
 const routes = [
@@ -17,6 +18,11 @@ const routes = [
     name: 'Login',
     component: Login, // Página de login
   },
+  {
+    path: '/register',
+    name: 'Register',
+    component: Register, // Página de registro
+  }
 ];
 
 // Crea el router
