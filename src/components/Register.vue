@@ -132,7 +132,7 @@ export default {
 </script>
 
 <template>
-  <div class="container d-flex justify-content-center align-items-center" data-bs-theme="dark" >
+  <div class="container d-flex justify-content-center align-items-center mt-5" data-bs-theme="dark" >
     <div class="p-4 border rounded-3 " style="max-width: 450px; width: 100%;">
       <h1 class="text-center mb-4">Registro</h1>
       
