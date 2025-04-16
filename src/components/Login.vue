@@ -20,8 +20,11 @@ export default {
         
         // Si el backend devuelve un token:
         if (response.data.token) {
-          localStorage.setItem('userToken', response.data.token); // Guarda el token
-          this.$router.push('/dashboard'); // Redirige al dashboard
+          //console.log(response);
+          //breakpoint
+          authService.storeUserData(response.data);
+
+          this.$router.push('/profile'); // Redirige al dashboard
         }
       } catch (err) {
         this.error = err.response?.data?.message || 'Error al iniciar sesión';
