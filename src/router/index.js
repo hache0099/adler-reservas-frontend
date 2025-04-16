@@ -3,8 +3,9 @@ import { createRouter, createWebHistory } from 'vue-router';
 
 // Importa tus componentes (páginas)
 import Login from '../components/Login.vue';
-import Home from '../components/HelloWorld.vue'; // Ejemplo adicional
+import Home from '../components/Home.vue'; 
 import Register from '../components/Register.vue';
+import Profile from '../components/Profile.vue';
 
 // Define las rutas
 const routes = [
@@ -22,6 +23,11 @@ const routes = [
     path: '/register',
     name: 'Register',
     component: Register, // Página de registro
+  },
+  {
+    path: '/profile',
+    name: 'Perfil',
+    component: Profile,
   }
 ];
 
