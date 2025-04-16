@@ -5,8 +5,8 @@ import Navbar from './components/Navbar.vue'
 
 <template>
   <div id="app" data-bs-theme="dark">
-    <Navbar/>
-    <div class="container mt-5" >
+    
+    <div class="container" >
       <!-- Barra de navegación opcional -->
 
       <!-- Aquí se cargarán las páginas -->
