@@ -11,10 +11,14 @@ export default {
   },
 
   storeUserData(data){
-    localStorage.setItem('userToken', response.data.token); // Guarda el token
-    localStorage.setItem('userId', response.data.user.id); //guarda la info de usuario
-    localStorage.setItem('userEmail', response.data.user.email);
-    localStorage.setItem('userPerfil', response.data.user.perfil_id);
+    localStorage.setItem('userToken', data.token); // Guarda el token
+    localStorage.setItem('userId', data.user.id); //guarda la info de usuario
+    localStorage.setItem('userEmail', data.user.email);
+    localStorage.setItem('userPerfil', data.user.perfil_id);
+    localStorage.setItem('nombre', data.user.persona.nombre);
+    localStorage.setItem('apellido', data.user.persona.apellido);
+
+    return true;
   },
   
   // Nueva función para verificar email
@@ -34,8 +38,11 @@ export default {
   
   logout() {
     // Elimina los datos del usuario del localStorage
-    localStorage.removeItem('userId');
-    localStorage.removeItem('userToken');
+    const datosAEliminar = ['userToken', 'userId', 'userEmail', 'userPerfil', 'nombre', 'apellido'];
+    
+    for(let dato of datosAEliminar){
+      localStorage.removeItem(dato);
+    }
     
     // Opcional: Enviar solicitud al backend para invalidar el token
     return axios.post(`${API_URL}/logout`, {}, {
