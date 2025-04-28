@@ -8,6 +8,7 @@ const USER_ID = localStorage.getItem('userId');
 class UserService {
   // Obtener perfil del usuario logueado
   getProfile() {
+    console.log(`Llamando a ${API_URL}/user/${USER_ID}`);
     return axios.get(`${API_URL}/user/${USER_ID}`, { 
       headers: authHeader() 
     }).then(response => {
@@ -18,6 +19,7 @@ class UserService {
 
   // Actualizar datos personales
   updateProfile(profileData) {
+    console.log('Actualizando datos:', profileData);
     return axios.put(`${API_URL}/user/${USER_ID}`, profileData, { 
       headers: authHeader() 
     }).then(response => {
