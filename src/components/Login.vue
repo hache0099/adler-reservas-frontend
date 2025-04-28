@@ -16,18 +16,19 @@ export default {
       this.isLoading = true;
 
       try {
+        console.log("logeando...")
         const response = await authService.login(this.email, this.password);
         
         // Si el backend devuelve un token:
         if (response.data.token) {
           //console.log(response);
           //breakpoint
-          authService.storeUserData(response.data);
+          const a = authService.storeUserData(response.data);
 
           this.$router.push('/profile'); // Redirige al dashboard
         }
       } catch (err) {
-        this.error = err.response?.data?.message || 'Error al iniciar sesión';
+        this.error = err;
       } finally {
         this.isLoading = false;
       }
@@ -62,6 +63,9 @@ export default {
       </div>
       <button type="submit" class="submit-btn">Ingresar</button>
     </form>
+    <div v-if="error">
+        {{ error }}
+    </div>
     <p class="signup-link">
       ¿No tienes cuenta? <a href="#">Regístrate</a>
     </p>
