@@ -1,6 +1,7 @@
 <script>
 import UserService from '../services/user.service';
 
+
 export default {
   name: 'UserProfile',
   data() {
@@ -111,9 +112,10 @@ export default {
         const updatedProfile = await UserService.updateProfile(updatedData);
         this.userData = updatedProfile;
         this.editMode.personal = false;
-        this.$toast.success('Datos personales actualizados correctamente');
+        //this.$toast.success('Datos personales actualizados correctamente');
+        console.log('Datos personales actualizados correctamente');
       } catch (error) {
-        this.$toast.error('Error al actualizar: ' + error.message);
+        //this.$toast.error('Error al actualizar: ' + error.message);
         console.error('Error al actualizar perfil:', error);
       } finally {
         this.updating = false;
@@ -121,16 +123,87 @@ export default {
     },
 
     // [Métodos similares para updateContactInfo y updateAddressInfo]
+    async updateContactInfo() {
+      this.updating = true;
+      
+      try {
+        const updatedData = {
+          contacto: {
+            tipo_contacto_id: this.editForm.tipo_contacto_id,
+            descripcion: this.editForm.telefono
+          }
+        };
+        
+        const updatedProfile = await UserService.updateProfile(updatedData);
+        this.userData = updatedProfile;
+        this.editMode.contact = false;
+        console.log('Información de contacto actualizada correctamente');
+        
+        // Actualizar la lista de contactos en el objeto userData
+        this.userData.persona.persona_contactos = this.userData.persona.persona_contactos.map(c => 
+          c.tipo_contacto.id === this.editForm.tipo_contacto_id ? 
+          { ...c, descripcion: this.editForm.telefono } : c
+        );
+        
+      } catch (error) {
+        console.error('Error al actualizar contacto:', error);
+      } finally {
+        this.updating = false;
+      }
+    },
+
+    async updateAddressInfo() {
+      this.updating = true;
+      
+      try {
+        const updatedData = {
+          domicilio: {
+            detalle: this.editForm.domicilio,
+            tipo_domicilio_id: this.editForm.tipo_domicilio_id
+          }
+        };
+        
+        const updatedProfile = await UserService.updateProfile(updatedData);
+        this.userData = updatedProfile;
+        this.editMode.address = false;
+        console.log('Dirección actualizada correctamente');
+        
+        // Actualizar los datos de domicilio localmente
+        this.userData.persona.domicilio = {
+          ...this.userData.persona.domicilio,
+          detalle: this.editForm.domicilio,
+          tipo_domicilio: {
+            id: this.editForm.tipo_domicilio_id,
+            descripcion: this.addressTypes.find(a => a.id === this.editForm.tipo_domicilio_id)?.descripcion || ''
+          }
+        };
+        
+      } catch (error) {
+        console.error('Error al actualizar dirección:', error);
+      } finally {
+        this.updating = false;
+      }
+    },
 
     // Resetear formulario de edición con los datos actuales
     resetEditForm() {
+      // Datos personales
       this.editForm = {
         nombre: this.userData.persona.nombre,
         apellido: this.userData.persona.apellido,
         fecha_nacimiento: this.userData.persona.fecha_nacimiento.split('T')[0],
         tipo_documento_id: this.userData.persona.persona_documento.tipo_documento.id,
         documento: this.userData.persona.persona_documento.descripcion,
-        // ... otros campos
+        
+        // Datos de contacto
+        telefono: this.phoneNumber,
+        tipo_contacto_id: this.userData.persona.persona_contactos.find(
+          c => c.tipo_contacto.descripcion.toLowerCase().includes('telefono')
+        )?.tipo_contacto.id || this.contactTypes[0]?.id,
+        
+        // Datos de domicilio
+        domicilio: this.userData.persona.domicilio.detalle,
+        tipo_domicilio_id: this.userData.persona.domicilio.tipo_domicilio.id
       };
     },
 
@@ -338,9 +411,10 @@ export default {
 
 <style scoped>
 .profile-container {
-  max-width: 800px;
-  margin: 2rem auto;
+  /*max-width: 800px;*/
+  margin: 2rem;
   padding: 0 15px;
+  width: 100%;
 }
 
 .profile-card {
