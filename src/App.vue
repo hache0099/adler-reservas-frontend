@@ -3,7 +3,11 @@ import HelloWorld from './components/HelloWorld.vue'
 import Navbar from './components/Navbar.vue'
 import Sidebar from './components/Sidebar2.vue'
 
-
+if (process.env.NODE_ENV === 'development') {
+  console.log('¡Estás en modo de desarrollo!');
+} else {
+  console.log('¡Estás en modo de producción!');
+}
 </script>
 
 <template>

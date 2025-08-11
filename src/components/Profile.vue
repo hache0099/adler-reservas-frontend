@@ -40,7 +40,14 @@ export default {
         documento: '',
         // ... otros campos del formulario
       },
-      updating: false
+      updating: false,
+      showPasswordModal: false,
+      passwordForm: {
+        current: '',
+        new: '',
+        confirm: ''
+      },
+      passwordError: ''
     }
   },
   computed: {
@@ -213,6 +220,29 @@ export default {
       if (this.editMode[section]) {
         this.resetEditForm();
       }
+    },
+    
+    async changePassword() {
+      if (this.passwordForm.new !== this.passwordForm.confirm) {
+        this.passwordError = 'Las contraseñas no coinciden.';
+        return;
+      }
+
+      // Aquí llamaría a tu servicio API real
+      await UserService.updatePassword(
+        localStorage.getItem('userId'),
+        this.passwordForm.current,
+        this.passwordForm.new
+      )
+        .then(() => {
+          this.showPasswordModal = false;
+          this.passwordForm = { current: '', new: '', confirm: '' };
+          this.passwordError = '';
+          alert('Contraseña actualizada correctamente');
+        })
+        .catch(err => {
+          this.passwordError = 'Error al cambiar la contraseña: ' + (err.response?.data?.message || 'Intente nuevamente');
+        });
     }
   }
 }
@@ -245,7 +275,7 @@ export default {
         <!-- Profile Data -->
         <template v-else>
           <!-- Sección Información Personal -->
-          <div class="profile-section">
+          <div class="profile-section" data-bs-theme="dark">
             <div class="d-flex justify-content-between align-items-center">
               <h3 class="section-title">Información Personal</h3>
               <button @click="toggleEditMode('personal')" class="btn btn-sm btn-outline-primary">
@@ -289,23 +319,23 @@ export default {
               </button>
             </form>
 
-            <div v-else class="row">
+            <div v-else class="row" data-bs-theme="dark">
               <div class="col-md-6">
                 <div class="info-item">
-                  <span class="info-label">Nombre:</span>
-                  <span class="info-value">{{ userData.persona.nombre }}</span>
+                  <span class="info-label text-white">Nombre:</span>
+                  <span class="info-value text-white">{{ userData.persona.nombre }}</span>
                 </div>
               </div>
               <div class="col-md-6">
                 <div class="info-item">
-                  <span class="info-label">Apellido:</span>
-                  <span class="info-value">{{ userData.persona.apellido }}</span>
+                  <span class="info-label text-white">Apellido:</span>
+                  <span class="info-value text-white">{{ userData.persona.apellido }}</span>
                 </div>
               </div>
               <div class="col-md-6">
                 <div class="info-item">
-                  <span class="info-label">Fecha de Nacimiento:</span>
-                  <span class="info-value">{{ formattedBirthDate }}</span>
+                  <span class="info-label text-white">Fecha de Nacimiento:</span>
+                  <span class="info-value text-white">{{ formattedBirthDate }}</span>
                 </div>
               </div>
               <div class="col-md-6">
@@ -401,6 +431,32 @@ export default {
               </div>
             </div>
           </div>
+          <!-- Botón para abrir el popup -->
+        <button class="btn btn-warning" @click="showPasswordModal = true">Cambiar contraseña</button>
+
+        <!-- Modal de cambio de contraseña -->
+        <div v-if="showPasswordModal" class="modal-overlay " tab-index="-1">
+          <div class="modal fade show d-block" tab-index="-1">
+            <h3>Cambiar Contraseña</h3>
+            <label>
+              Contraseña Actual:
+              <input class="form-control" type="password" v-model="passwordForm.current" />
+            </label>
+            <label>
+              Nueva Contraseña:
+              <input class="form-control" type="password" v-model="passwordForm.new" />
+            </label>
+            <label>
+              Confirmar Nueva Contraseña:
+              <input class="form-control" type="password" v-model="passwordForm.confirm" />
+            </label>
+            <div class="modal-actions">
+              <button class="btn btn-primary" @click="changePassword">Guardar</button>
+              <button class="btn btn-secondary" @click="showPasswordModal = false">Cancelar</button>
+            </div>
+            <p v-if="passwordError" class="error">{{ passwordError }}</p>
+          </div>
+        </div>
         </template>
       </div>
     </div>
@@ -441,7 +497,7 @@ export default {
 
 .section-title {
   font-size: 1.25rem;
-  color: #333;
+  --color: #333;
   margin-bottom: 1.25rem;
   padding-bottom: 0.5rem;
   border-bottom: 2px solid #f0f0f0;
@@ -453,13 +509,13 @@ export default {
 
 .info-label {
   font-weight: 600;
-  color: #555;
+  --color: #555;
   display: block;
   margin-bottom: 0.25rem;
 }
 
 .info-value {
-  color: #333;
+  --color: #333;
   font-size: 1.1rem;
 }
 
@@ -506,5 +562,28 @@ export default {
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
   border: 0;
+}
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+}
+.modal {
+  background: black;
+  padding: 20px;
+  margin: 100px auto;
+  width: 300px;
+  border-radius: 8px;
+}
+.modal-actions {
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-between;
+}
+.error {
+  color: red;
 }
 </style>

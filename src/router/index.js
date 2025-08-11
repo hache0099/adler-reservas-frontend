@@ -9,10 +9,14 @@ import Register from '../components/Register.vue';
 import Profile from '../components/Profile.vue';
 import Reserva from '../components/Reserva.vue';
 import NuevaReserva from '../components/NuevaReserva.vue';
+import ForgotPassword from '../components/ForgotPassword.vue';
+import ResetPassword from '../components/ResetPassword.vue';
 import Gestion from '../components/gestion/Index.vue';
 import TablasTemplate from '../components/gestion/TablasTemplate.vue';
 import GestionCanchas from '../components/gestion/Cancha.vue';
 import GestionPerfiles from '../components/gestion/Perfil.vue';
+import GestionUsuarios from '../components/gestion/User.vue';
+import GestionReservas from '../components/gestion/Reservas.vue';
 
 // Define las rutas
 const routes = [
@@ -38,6 +42,18 @@ const routes = [
     path: '/register',
     name: 'Register',
     component: Register, // Página de registro
+    meta: {hideSidebar: true},
+  },
+  {
+    path: '/forgot-password',
+    name: 'Forgot Password',
+    component: ForgotPassword,
+    meta: {hideSidebar: true},
+  },
+  {
+    path: '/reset-password',
+    name: 'Reset Password',
+    component: ResetPassword,
     meta: {hideSidebar: true},
   },
   {
@@ -100,6 +116,18 @@ const routes = [
     component: GestionPerfiles,
     meta: {hideSidebar: false},
   },
+  {
+    path: '/gestion/usuarios',
+    name: 'Gestion Usuarios',
+    component: GestionUsuarios,
+    meta: {hideSidebar: false},
+  },
+  {
+    path: '/gestion/reservas',
+    name: 'Gestion Reservas',
+    component: GestionReservas,
+    meta: {hideSidebar: false},
+  },
 ];
 
 // Crea el router
@@ -110,8 +138,13 @@ const router = createRouter({
 
 router.beforeEach(async (to, from) => {
   const isAuthenticated = localStorage.getItem('userToken') !== null;
-  const noAuthReq = ['Register', 'Login', 'Home'];
-
+  const noAuthReq = [
+    'Register', 
+    'Login', 
+    'Home', 
+    'Forgot Password', 
+    'Reset Password',
+  ];
 
   if(!isAuthenticated && !noAuthReq.includes(to.name)){
     return { name: 'Login' }

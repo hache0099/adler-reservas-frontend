@@ -31,23 +31,23 @@ export default {
     <div class="d-flex flex-column flex-shrink-0 p-3 text-bg-dark" style="width: 280px; height: 100vh">
     <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
       <svg class="bi pe-none me-2" width="40" height="32"><use xlink:href="#bootstrap"/></svg>
-      <span class="fs-4">Sidebar</span>
+      <span class="fs-4">Adler Reservas</span>
     </a>
     <hr>
     <ul class="nav nav-pills flex-column mb-auto">
       <li class="nav-item text-white">
-        <a href="/" class="nav-link">
+        <router-link to="/" class="nav-link text-white">
           <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#home"/></svg>
           Home
-        </a>
+        </router-link>
       </li>
       <li>
-        <a href="/reservas" class="nav-link text-white">
+        <router-link to="/reservas" class="nav-link text-white">
           <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#speedometer2"/></svg>
           Reservas
-        </a>
+        </router-link>
       </li>
-      <li>
+      <!--li>
         <a href="#" class="nav-link text-white">
           <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#table"/></svg>
           Orders
@@ -58,12 +58,12 @@ export default {
           <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#grid"/></svg>
           Products
         </a>
-      </li>
+      </li-->
       <li v-if="perfil !== 3">
-        <a href="/gestion" class="nav-link text-white">
+        <router-link to="/gestion" class="nav-link text-white">
           <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#grid"/></svg>
           Gestión
-        </a>
+        </router-link>
       </li>
 
     </ul>
@@ -74,9 +74,7 @@ export default {
         <strong>{{ nombre + ' ' + apellido }}</strong>
       </a>
       <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
-        <li><a class="dropdown-item" href="#">New project...</a></li>
-        <li><a class="dropdown-item" href="#">Settings</a></li>
-        <li><a class="dropdown-item" href="#">Profile</a></li>
+        <li><router-link to="/profile" class="dropdown-item">Mi Perfil</router-link></li>
         <li><hr class="dropdown-divider"></li>
         <li><a class="dropdown-item" href="/logout">Cerrar sesión</a></li>
       </ul>

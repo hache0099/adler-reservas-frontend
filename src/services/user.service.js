@@ -37,10 +37,11 @@ class UserService {
   }
 
   // Actualizar contraseña
-  updatePassword(currentPassword, newPassword) {
-    return axios.put(`${API_URL}/user/password`, {
-      current_password: currentPassword,
-      new_password: newPassword
+  updatePassword(id, currentPassword, newPassword) {
+    return axios.put(`${API_URL}/change-password`, {
+      id: id,
+      currentPassword: currentPassword,
+      newPassword: newPassword
     }, { 
       headers: authHeader() 
     }).then(response => {

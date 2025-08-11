@@ -12,6 +12,7 @@ const nombreEntidad = computed(() => entidad.value.replace('tipo-', '').replace(
 const datos = ref([])
 const mostrarModal = ref(false)
 const form = ref({ id: null, descripcion: '' })
+const errorDescripcion = ref('')
 
 const apiUrl = 'http://localhost:9000/api/v1'
 
@@ -22,8 +23,20 @@ const fetchDatos = async () => {
   datos.value = data
 }
 
+const campoEditable = computed(() => {
+  if (entidad.value === 'tipos-cancha') return 'material'
+  return 'descripcion'
+})
+
 // Guardar o actualizar
 const guardar = async () => {
+  if (!form.value[campoEditable.value] || form.value[campoEditable.value].trim() === '') {
+      errorDescripcion.value = `El campo ${campoEditable.value} no puede estar vacío.`
+      return
+    }
+
+  // Si la validación pasa, limpiamos el error
+  errorDescripcion.value = ''
   try {
     if (form.value.id) {
       await axios.put(`${apiUrl}/admin/${entidad.value}/${form.value.id}`, form.value)
@@ -60,9 +73,15 @@ const toggleEstado = async (item) => {
 
 // Modal
 const abrirFormulario = (item = null) => {
-  form.value = item ? { ...item } : { id: null, descripcion: '' }
+  if (item) {
+    form.value = { id: item.id, [campoEditable.value]: item[campoEditable.value] }
+  } else {
+    form.value = { id: null, [campoEditable.value]: '' }
+  }
+  errorDescripcion.value = ''
   mostrarModal.value = true
 }
+
 const cerrarFormulario = () => {
   mostrarModal.value = false
   form.value = { id: null, descripcion: '' }
@@ -116,8 +135,11 @@ onMounted(fetchDatos)
             <button type="button" class="btn-close btn-close-white" @click="cerrarFormulario()"></button>
           </div>
           <div class="modal-body">
-            <label class="form-label">Descripción</label>
-            <input v-model="form.descripcion" class="form-control bg-dark text-light border-light" />
+            <label class="form-label text-capitalize">{{ campoEditable }}</label>
+            <input v-model="form[campoEditable]" class="form-control bg-dark text-light border-light" />
+            <div v-if="errorDescripcion" class="text-danger mt-2">
+                {{ errorDescripcion }}
+            </div>
           </div>
           <div class="modal-footer">
             <button class="btn btn-outline-secondary" @click="cerrarFormulario()">Cancelar</button>

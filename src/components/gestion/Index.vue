@@ -33,7 +33,7 @@
       <div class="d-flex flex-md-wrap justify-content-center">
         <div v-for="link in linksGestion" class="card link-card" >
           <div class="card-body">
-            <h5 class="card-title"><a class="stretched-link" :href="link.ruta.substring(0, link.ruta.length -1) ">{{ link.descripcion }}</a></h5>
+            <h5 class="card-title"><router-link class="stretched-link" :to="link.ruta.substring(0, link.ruta.length -1) ">{{ link.descripcion }}</router-link></h5>
           </div>
           
         </div>

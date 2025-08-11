@@ -16,8 +16,13 @@
                 <a class="nav-link active" :href="item.link">{{ item.text }}</a>
               </li>
             </ul>
-            <div class="d-flex w-50 justify-content-end">
+            <div v-if="!isLoggedIn" class="d-flex w-50 justify-content-end">
               <router-link to="/register" class="nav-link">Registrarse</router-link>
+              <router-link to="/login" class="nav-link">Iniciar Sesión</router-link>
+            </div>
+            <div v-else class="d-flex w-50 justify-content-end">
+              <router-link to="/profile" class="nav-link">Mi Perfil</router-link>
+              <router-link to="/logout" class="nav-link">Cerrar Sesión</router-link>
             </div>
           </div>
         </div>
@@ -129,11 +134,9 @@ export default {
         splashBg
       },
       navItems: [
-        { text: 'Home', link: '#' },
         { text: 'Quiénes somos', link: '#' },
-        { text: 'Precios', link: '#' },
+        { text: 'Reservas', link: '#' },
         { text: 'Horarios', link: '#' },
-        { text: 'Contáctanos', link: '#' }
       ],
       benefits: [
         {
@@ -173,11 +176,13 @@ export default {
         { icon: 'facebook', link: 'https://facebook.com' },
         { icon: 'instagram', link: 'https://instagram.com' },
         { icon: 'twitter', link: 'https://twitter.com' }
-      ]
+      ],
+      isLoggedIn: false
     }
   },
   mounted() {
     this.initAnimations();
+    this.getLoggedIn();
   },
   methods: {
     initAnimations() {
@@ -199,6 +204,10 @@ export default {
       );
 
       elements.forEach(element => observer.observe(element));
+    },
+
+    getLoggedIn() {
+        this.isLoggedIn = localStorage.getItem('userToken') !== null
     }
   }
 }
@@ -240,6 +249,7 @@ export default {
 #home-body {
   background-image: url('../assets/img/spalsh.png');
   font-family: "Oswald";
+  width: 100vw;
 }
 
 main {

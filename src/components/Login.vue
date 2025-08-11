@@ -67,7 +67,10 @@ export default {
         {{ error }}
     </div>
     <p class="signup-link">
-      ¿No tienes cuenta? <a href="#">Regístrate</a>
+      ¿No tienes cuenta? <router-link to="/register">Regístrate</router-link>
+    </p>
+    <p class="signup-link">
+      <router-link to="/forgot-password">Olvidé mi contraseña</router-link>
     </p>
   </div>
 </template>

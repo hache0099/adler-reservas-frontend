@@ -5,6 +5,8 @@ import axios from 'axios'
 const canchas = ref([])
 const tiposCanchas = ref([])
 const mostrarModal = ref(false)
+const errores = ref({})
+
 const form = ref({
   id: null,
   max_personas: '',
@@ -15,6 +17,36 @@ const form = ref({
 })
 
 const apiUrl = 'http://localhost:9000/api/v1'
+
+const validarFormulario = () => {
+  errores.value = {}
+
+  if (!form.value.max_personas || form.value.max_personas <= 0) {
+    errores.value.max_personas = 'Debe ingresar un número válido de personas'
+  }
+
+  if (!form.value.tipo_cancha_id) {
+    errores.value.tipo_cancha_id = 'Debe seleccionar un tipo de cancha'
+  }
+
+  const desde = Number(form.value.hora_desde)
+  const hasta = Number(form.value.hora_hasta)
+
+  if (isNaN(desde) || desde < 0 || desde > 23) {
+    errores.value.hora_desde = 'Hora desde debe estar entre 0 y 23'
+  }
+
+  if (isNaN(hasta) || hasta < 0 || hasta > 23) {
+    errores.value.hora_hasta = 'Hora hasta debe estar entre 0 y 23'
+  }
+
+  if (!errores.value.hora_desde && !errores.value.hora_hasta && desde >= hasta) {
+    errores.value.hora_hasta = 'Hora hasta debe ser mayor que hora desde'
+  }
+
+  return Object.keys(errores.value).length === 0
+}
+
 
 const fetchCanchas = async () => {
   try {
@@ -37,6 +69,10 @@ const fetchTiposCanchas = async () => {
 }
 
 const guardar = async () => {
+  if (!validarFormulario()) {
+    return
+  }
+
   try {
     if (form.value.id) {
       form.value.estado_cancha_id = form.value.estado_cancha_id ?? canchas.estado_cancha_id;
@@ -154,6 +190,7 @@ onMounted(() => {
             <div class="mb-3">
               <label class="form-label">Personas máx.</label>
               <input type="number" v-model="form.max_personas" class="form-control bg-dark text-light border-light" />
+              <small v-if="errores.max_personas" class="text-danger">{{ errores.max_personas }}</small>
             </div>
             <div class="mb-3">
               <label class="form-label">Tipo de cancha</label>
@@ -162,13 +199,18 @@ onMounted(() => {
                   {{ tipo.material }}
                 </option>
               </select>
+              <small v-if="errores.tipo_cancha_id" class="text-danger">{{ errores.tipo_cancha_id }}</small>
+
               <div class="mb-3">
                 <label class="form-label">Hora desde</label>
                 <input type="number" v-model="form.hora_desde" class="form-control bg-dark text-light border-light" min="0" max="23" />
+                <small v-if="errores.hora_desde" class="text-danger">{{ errores.hora_desde }}</small>
               </div>
+
               <div class="mb-3">
                 <label class="form-label">Hora hasta</label>
                 <input type="number" v-model="form.hora_hasta" class="form-control bg-dark text-light border-light" min="0" max="23" />
+                <small v-if="errores.hora_hasta" class="text-danger">{{ errores.hora_hasta }}</small>
               </div>
             </div>
           </div>

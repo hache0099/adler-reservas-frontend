@@ -14,16 +14,25 @@ class ReservaService {
     })
   }
 
-  getCanchasDisponibles(fecha, hora){
-    return axios.get(`${API_URL}/reservas/get-canchas-disponibles`, {
-      headers: authHeader(),
-      params: {
-        fecha: fecha,
-        hora: hora 
-      }
+  getTodasReservas() {
+    return axios.get(`${API_URL}/reservas/${USER_ID}/get-all-reservas`, {
+      headers: authHeader()
     }).then(response => {
       return response.data
     })
+  }
+
+  async getCanchasDisponibles(fecha, hora){
+    try {
+      const res = await axios.get(`${API_URL}/reservas/get-canchas-disponibles`, {
+        headers: authHeader(),
+        params: { fecha, hora }
+      });
+      return res.data;
+    } catch (error) {
+      console.error('Error al obtener canchas disponibles:', error);
+      return [];
+    }
   }
 
   createReserva(fecha, hora, cancha, userId){

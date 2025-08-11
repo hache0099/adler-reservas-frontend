@@ -22,7 +22,7 @@ export default {
   },
   
   // Nueva función para verificar email
-  checkEmail(email) {
+  async checkEmail(email) {
     return axios.post(`${API_URL}/auth/check-email`, { email });
   },
 
@@ -40,16 +40,18 @@ export default {
     // Elimina los datos del usuario del localStorage
     const datosAEliminar = ['userToken', 'userId', 'userEmail', 'userPerfil', 'nombre', 'apellido'];
     
-    for(let dato of datosAEliminar){
-      localStorage.removeItem(dato);
-    }
-    
-    // Opcional: Enviar solicitud al backend para invalidar el token
-    return axios.post(`${API_URL}/logout`, {}, {
+    // Enviar solicitud al backend para invalidar el token
+    axios.post(`${API_URL}/auth/logout`, {}, {
       headers: authHeader()
-    }).catch(error => {
+    })   
+    .catch(error => {
       console.error('Error al cerrar sesión en el backend:', error);
       // Aún así continuamos con el logout aunque falle la llamada al backend
+    })
+    .finally(() => {
+      for(let dato of datosAEliminar){
+        localStorage.removeItem(dato);
+      }     
     });
   }
 };
